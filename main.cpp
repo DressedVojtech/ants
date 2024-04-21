@@ -30,6 +30,15 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(height, width), "ant-sim");
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(20);
+    sf::Image icon;
+    icon.loadFromFile("./../1.png"); // File/Image/Pixel
+    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+
+    sf::Texture backgroundTexture;
+    backgroundTexture.loadFromFile("./../grass.jpg");
+    sf::Sprite background(backgroundTexture);
+    int numTilesX = window.getSize().x / backgroundTexture.getSize().x + 1;
+    int numTilesY = window.getSize().y / backgroundTexture.getSize().y + 1;
 
     sf::Texture ant1;
     sf::Texture ant2;
@@ -55,7 +64,7 @@ int main() {
     bool moving = false;
     vec2 ant_move = {0, 0};
 
-    float speed = 10;
+    float speed = 15;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -102,28 +111,36 @@ int main() {
         if (moving) {
             switch (counter%4) {
                 case 0:
-                    window.clear(sf::Color::White);
+                    window.clear();
                     ant.setTexture(&ant1);
                     break;
                 case 1:
-                    window.clear(sf::Color::White);
+                    window.clear();
                     ant.setTexture(&ant2);
                     break;
                 case 2:
-                    window.clear(sf::Color::White);
+                    window.clear();
                     ant.setTexture(&ant3);
                     break;
                 case 3:
-                    window.clear(sf::Color::White);
+                    window.clear();
                     ant.setTexture(&ant4);
                     break;
             }
         } else {
-            window.clear(sf::Color::White);
+            window.clear();
             ant.setTexture(&ant1);
         }
         moving = false;
         ant_move = {0, 0};
+        for (int i = 0; i < numTilesX; ++i)
+        {
+            for (int j = 0; j < numTilesY; ++j)
+            {
+                background.setPosition(i * backgroundTexture.getSize().x, j * backgroundTexture.getSize().y);
+                window.draw(background);
+            }
+        }
         window.draw(ant);
         window.display();
 
